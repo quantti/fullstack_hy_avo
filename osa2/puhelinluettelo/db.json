@@ -1,0 +1,19 @@
+{
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "944404040",
+      "id": 1
+    },
+    {
+      "name": "Martti Tienari",
+      "number": "040044040",
+      "id": 2
+    },
+    {
+      "name": "Antti",
+      "number": "050-05050505",
+      "id": 3
+    }
+  ]
+}
