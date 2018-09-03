@@ -17,6 +17,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    this.updatePersons()
+  }
+
+  updatePersons = () => {
     personService
       .getAll()
       .then(response => {
@@ -24,21 +28,22 @@ class App extends React.Component {
       })
   }
 
-
   submitHandler = (event) => {
     event.preventDefault()
-    let newPerson = true
     const person = {
       name: this.state.newName,
       number: this.state.newNumber
     }
     const persons = this.state.persons
-    persons.forEach(p => {
-      if (p.name.toLowerCase() === person.name.toLowerCase()) {
-        newPerson = false
-      }
+    
+    const newPerson = persons.filter(oldPerson => {
+      console.log('old: ', oldPerson.name)
+      console.log('new: ', person.name)
+      return oldPerson.name.toLowerCase() === person.name.toLowerCase()
     })
-    if (newPerson) {
+    console.log('bool: ', newPerson)
+
+    if (newPerson.length === 0) {
       personService
         .create(person)
         .then(response => {
@@ -53,7 +58,7 @@ class App extends React.Component {
     } else {
       const result = window.confirm(person.name + " on jo luettelossa, korvataanko numero uudella?")
       if (result) {
-        const id = this.state.persons.filter(p => p.name === person.name)[0].id
+        const id = this.state.persons.filter(p => p.name.toLowerCase() === person.name.toLowerCase())[0].id
         personService
           .update(id, person)
           .then(response => {
@@ -70,17 +75,7 @@ class App extends React.Component {
               })
           })
           .catch(error => {
-            personService
-              .create(person)
-              .then(response => {
-                personService
-                  .getAll()
-                  .then(response => {
-                    this.setState({
-                      persons: response.data
-                    })
-                  })
-              })
+            console.log('error', error)
           })
       }
     }
@@ -103,13 +98,15 @@ class App extends React.Component {
   }
 
   deletePerson = (event, person) => {
-    const result = window.confirm("Haluatko varmasti poistaa henkilön ", person.name)
+    const name = person.name
+    const result = window.confirm("Haluatko varmasti poistaa henkilön " + name)
     const id = person.id
     if (result) {
       personService
         .deletePerson(id)
         .then(response => {
-          const newPersons = this.state.persons.filter(person => person.id !== Number(id))
+          const newPersons = this.state.persons.filter(person => person.id !== id)
+          console.log('persons: ', newPersons)
           this.setState({
             persons: newPersons,
             message: person.name + ' poistettu luettelosta!'
