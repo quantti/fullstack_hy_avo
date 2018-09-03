@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js",
-    "test": "test"
+    "test": "jest --verbose"
   },
   "author": "Kari Vänttinen",
   "license": "MIT",
@@ -17,6 +17,11 @@
     "mongoose": "^5.2.12"
   },
   "devDependencies": {
+    "eslint": "^5.5.0",
+    "jest": "^23.5.0",
     "nodemon": "^1.18.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
